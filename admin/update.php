@@ -2,10 +2,8 @@
 include 'functions.php';
 $pdo = pdo_connect_mysql();
 $msg = '';
-// Check if the contact id exists, for example update.php?id=1 will get the contact with the id of 1
 if (isset($_GET['id'])) {
     if (!empty($_POST)) {
-        // This part is similar to the create.php, but instead we update a record and not insert
         $id = isset($_POST['id']) ? $_POST['id'] : NULL;
         $title = isset($_POST['title']) ? $_POST['title'] : '';
         $author = isset($_POST['author']) ? $_POST['author'] : '';
@@ -15,12 +13,13 @@ if (isset($_GET['id'])) {
         $pages = isset($_POST['pages']) ? $_POST['pages'] : '';
         $dimensions = isset($_POST['dimensions']) ? $_POST['dimensions'] : '';
         $overview = isset($_POST['overview']) ? $_POST['overview'] : '';
-        // Update the record
-        $stmt = $pdo->prepare('UPDATE contacts SET title = ?, author = ?, isbn13 = ?, `format` = ?, publisher = ?, pages = ?, dimensions = ?, overview = ? WHERE id = ?');
-        $stmt->execute([$title, $author, $isbn13, $format, $publisher, $pages, $dimensions, $overview, $id]);
+        $uitgeleend = isset($_POST['uitgeleend']) ? $_POST['uitgeleend'] : '';
+        // Update de records
+        $stmt = $pdo->prepare('UPDATE contacts SET title = ?, author = ?, isbn13 = ?, `format` = ?, publisher = ?, pages = ?, dimensions = ?, overview = ?, uitgeleend = ? WHERE id = ?');
+        $stmt->execute([$title, $author, $isbn13, $format, $publisher, $pages, $dimensions, $overview, $uitgeleend, $id]);
         $msg = 'Updated Successfully!';
     }
-    // Get the contact from the contacts table
+    // Haal het contact uit de contactentabel
     $stmt = $pdo->prepare('SELECT * FROM contacts WHERE id = ?');
     $stmt->execute([$_GET['id']]);
     $contact = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -32,7 +31,6 @@ if (isset($_GET['id'])) {
 }
 
 // Dit is de code die ervoor zorgt dat je niet op de pagina kan komen zonder in te loggen
-// We need to use sessions, so you should always start sessions using the below code.
 session_start();
 // Als je niet bent ingelogd ga je terug naar index.html dus de inlog pagina
 if (!isset($_SESSION['loggedin'])) {
@@ -64,7 +62,9 @@ if (!isset($_SESSION['loggedin'])) {
         <input type="text" name="pages" placeholder="pages" value="<?=$contact['pages']?>" id="pages">
         <input type="text" name="dimensions" placeholder="dimensions" value="<?=$contact['dimensions']?>" id="dimensions">
         <label for="title">overview</label>
+        <label for="title">Uitgeleend</label>
         <input type="text" name="overview" placeholder="overview" value="<?=$contact['overview']?>" id="overview">
+        <input type="text" name="uitgeleend" placeholder="uitgeleend" value="<?=$contact['uitgeleend']?>" id="uitgeleend">
         <!-- Submit -->
         <input type="submit" value="Update">
     </form>

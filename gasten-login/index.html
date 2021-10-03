@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CMS - Login</title>
+    <title>Gasten - Login</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
     <div class="login">
-        <h1>Bibliotheek Admin Login</h1>
+        <h1>Bibliotheek Gasten Login</h1>
         <form action="authenticate.php" method="post">
             <label for="username">
                 <i class="fas fa-user"></i>
@@ -21,6 +21,7 @@
             </label>
             <input type="password" name="password" placeholder="Password" id="password" required>
             <input type="submit" value="Login">
+            echo "<td><input type='hidden' name='status' value='N'><input type='checkbox' name='status' value='Y'></td>";
         </form>
     </div>
 </body>

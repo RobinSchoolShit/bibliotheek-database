@@ -4,12 +4,11 @@ $pdo = pdo_connect_mysql();
 $msg = '';
 // Bericht als je succesvol een nieuw boek aangemaakt hebt
 $msg = 'Created Successfully!';
-// Check if POST data is not empty
+// Kijkt of post data niet 0 is
 if (!empty($_POST)) {
-    // Post data not empty insert a new record
-    // Set-up the variables that are going to be inserted, we must check if the POST variables exist if not we can default them to blank
+    // Stel de variabelen in die zullen worden ingevoegd, we moeten controleren of de POST-variabelen bestaan, zo niet, dan kunnen we ze standaard leeg maken
     $id = isset($_POST['id']) && !empty($_POST['id']) && $_POST['id'] != 'auto' ? $_POST['id'] : NULL;
-    // Check if POST variable "name" exists, if not default the value to blank, basically the same for all variables
+    // Controleer of POST-variabele "naam" bestaat, indien niet standaard de waarde leeg, in principe hetzelfde voor alle variabelen
     $title = isset($_POST['title']) ? $_POST['title'] : '';
     $author = isset($_POST['author']) ? $_POST['author'] : '';
     $isbn13 = isset($_POST['isbn13']) ? $_POST['isbn13'] : '';
@@ -18,10 +17,10 @@ if (!empty($_POST)) {
     $pages = isset($_POST['pages']) ? $_POST['pages'] : '';
     $dimensions = isset($_POST['dimensions']) ? $_POST['dimensions'] : '';
     $overview = isset($_POST['overview']) ? $_POST['overview'] : '';
-    $created = isset($_POST['created']) ? $_POST['created'] : date('Y-m-d H:i:s');
-    // Insert new record into the contacts table
-    $stmt = $pdo->prepare('INSERT INTO contacts VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
-    $stmt->execute([$id, $title, $author, $isbn13, $format, $publisher, $pages, $dimensions, $overview]);
+    $uitgeleend = isset($_POST['uitgeleend']) ? $_POST['uitgeleend'] : '';
+    // Nieuw record invoegen in de contactentabel
+    $stmt = $pdo->prepare('INSERT INTO contacts VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    $stmt->execute([$id, $title, $author, $isbn13, $format, $publisher, $pages, $dimensions, $overview, $uitgeleend]);
 }
 ?>
 
@@ -47,9 +46,9 @@ if (!empty($_POST)) {
         <input type="text" name="pages" placeholder="pages" id="pages">
         <input type="text" name="dimensions" placeholder="dimensions" id="dimensions">
         <label for="publisher">overview</label>
-        <label for="created">Created</label>
+        <label for="created">Uitgeleend</label>
         <input type="text" name="overview" placeholder="overview" id="overview">
-        <input type="datetime-local" name="created" value="<?=date('Y-m-d\TH:i')?>" id="created">
+        <input type="text" name="uitgeleend" placeholder="uitgeleend" id="uitgeleend">
         <input type="submit" value="Create">
     </form>
     <?php if ($msg): ?>

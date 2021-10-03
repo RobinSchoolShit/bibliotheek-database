@@ -1,29 +1,29 @@
 <?php
 include '../admin/functions.php';
-// Connect to MySQL database
+// Connecten met de database
 $pdo = pdo_connect_mysql();
-// Get the page via GET request (URL param: page), if non exists default the page to 1
+
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-// Number of records to show on each page
+// Aantal die wordt getoond op een pagina
 $records_per_page = 3;
 
-// Prepare the SQL statement and get records from our contacts table, LIMIT will determine the page
+// Bereid de SQL-instructie voor en haal records uit onze contactentabel, LIMIT bepaalt de pagina
 $stmt = $pdo->prepare('SELECT * FROM contacts ORDER BY id LIMIT :current_page, :record_per_page');
 $stmt->bindValue(':current_page', ($page-1)*$records_per_page, PDO::PARAM_INT);
 $stmt->bindValue(':record_per_page', $records_per_page, PDO::PARAM_INT);
 $stmt->execute();
-// Fetch the records so we can display them in our template.
+
 $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Get the total number of contacts, this is so we can determine whether there should be a next and previous button
+// Krijg het totale aantal contacten, dit is zodat we kunnen bepalen of er een volgende en vorige knop moet zijn
 $num_contacts = $pdo->query('SELECT COUNT(*) FROM contacts')->fetchColumn();
 
 // Dit is de code die ervoor zorgt dat je niet op de pagina kan komen zonder in te loggen
-// We need to use sessions, so you should always start sessions using the below code.
+// We moeten sessies gebruiken, dus je moet sessies altijd starten met de onderstaande code.
 session_start();
-// If the user is not logged in redirect to the login page...
+// Als de gebruiker niet inlogd wordt hij teruggestuurd
 if (!isset($_SESSION['loggedin'])) {
-	header('Location: ../cms-login/index.html');
+	header('Location: ../gasten-login/index.html');
 	exit;
 }
 
